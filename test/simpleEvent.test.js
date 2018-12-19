@@ -1,6 +1,32 @@
 var SimpleEvent = artifacts.require("./SimpleEvent.sol");
 
-contract("SimpleEvent - initialize event, tickets and price count", function(accounts){
+contract("SimpleEvent - Setting price", function (accounts){
+    const alice = accounts[0];
+    const bob = accounts[1];
+    it("should allow the owner to set the price", async () => {
+        const price = 25;
+        const event = await SimpleEvent.deployed();
+        await event.setPrice(price, {from: alice});
+        newTicketPrice = await event.getPrice.call();
+        assert.equal(newTicketPrice, price, "Ticket price incorrect");
+    });
+
+    it("should not allow anyone other than the owner to set the price", async () => {
+        const event = await SimpleEvent.deployed();
+        price = 11;
+        for (let index = 1; index < accounts.length; index++) {
+            const account = accounts[index];
+            try{
+                await event.setPrice(price, {from: account});
+            } catch (error){
+                err = error;
+            }
+            assert.equal(err.message, "VM Exception while processing transaction: revert");
+        }
+    });
+});
+
+contract("SimpleEvent - Initialize event, tickets and price count", function(accounts){
     it("should be initialized with 8 tickets and price = 1", async () => {
         const event = await SimpleEvent.deployed();
         remainingTickets = await event.ticketsRemaining.call();
