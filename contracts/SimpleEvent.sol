@@ -3,7 +3,7 @@ pragma solidity ^0.4.23;
 //Simple event selling tickets
 contract SimpleEvent {
     //Owner of this contract
-    address public owner;
+    address owner;
     //Number of tickets available
     uint private tickets;
     //Price of tickets
@@ -55,5 +55,18 @@ contract SimpleEvent {
     function setPrice(uint _newPrice) public onlyOwner returns (uint) {
         price = _newPrice;
         return price;
+    }
+
+    //Get the contract balance
+    //TODO Test
+    function getBalance() public onlyOwner view returns (uint) {
+        return address(this).balance;
+    }
+
+    //Withdraw balance from the contract
+    //TODO Test
+    function withdraw(uint amount) public onlyOwner {
+        require(amount >= address(this).balance, "Not enough balance to withdraw that");
+        msg.sender.transfer(amount);
     }
 }
