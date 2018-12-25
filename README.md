@@ -9,9 +9,10 @@ Tickets can be purchased for ether, and the total balance of the event can be wi
 Future work:
 
 * Fully test
-* Cancel event, refund
-* Add name, description
-* Add venue, time
+* Cancel event - DONE
+* Refund
+* Add name, description - DONE
+* Add venue, time - DONE
 * Verify tickets upon arrival
 * Tickets are their own contract?
 * Withdrawal based on either: time or unique ticket contract confirmation?

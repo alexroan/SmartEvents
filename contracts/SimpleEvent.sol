@@ -10,6 +10,8 @@ contract SimpleEvent {
     string private description;
     //Date of event
     string private date;
+    //Name of venue
+    string private venue;
     //Number of tickets available
     uint private tickets;
     //Price of tickets
@@ -79,6 +81,12 @@ contract SimpleEvent {
         return date;
     }
 
+    //Get the venue
+    //TODO test
+    function getVenue() public view returns(string) {
+        return venue;
+    }
+
     //Check if event has been cancelled
     function isCancelled() public view returns(bool) {
         return cancelled;
@@ -117,6 +125,13 @@ contract SimpleEvent {
     function setDate(string _date) public onlyOwner returns(string) {
         date = _date;
         return date;
+    }
+
+    //Set the venue
+    //TODO test
+    function setVenue(string _venue) public onlyOwner returns(string) {
+        venue = _venue;
+        return venue;
     }
 
     //Cancel event
