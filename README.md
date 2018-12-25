@@ -9,6 +9,11 @@ Tickets can be purchased for ether, and the total balance of the event can be wi
 Future work:
 
 * Fully test
-* Tickets are their own contract
-* Withdrawal basedon either: time or unique ticket contract confirmation?
+* Cancel event, refund
+* Add name, description
+* Add venue, time
+* Verify tickets upon arrival
+* Tickets are their own contract?
+* Withdrawal based on either: time or unique ticket contract confirmation?
+
 * Build easy dapp on top, so multiple events can be managed, tickets can be bought, etc
