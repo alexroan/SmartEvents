@@ -1,5 +1,5 @@
 var SimpleEvent = artifacts.require("./SimpleEvent.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(SimpleEvent, 8, 1);
+  deployer.deploy(SimpleEvent, "My Event", 8, 1);
 };

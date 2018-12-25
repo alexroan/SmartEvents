@@ -42,13 +42,13 @@ contract("SimpleEvent - Initialize event, tickets and price count", function(acc
         } catch (error){
             err = error;
         }
-        assert.equal(err.message, "SimpleEvent contract constructor expected 2 arguments, received 0");
+        assert.equal(err.message, "SimpleEvent contract constructor expected 3 arguments, received 0");
     });
 
     it("should fail if initialized with tickets as zero", async () => {
         let err = null
         try{
-            await SimpleEvent.new(0,0);
+            await SimpleEvent.new("Some event",0,0);
         } catch (error){
             err = error;
         }
