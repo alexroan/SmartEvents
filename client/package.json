@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "drizzle": "^1.2.4",
+    "drizzle-react": "^1.2.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.2"
