@@ -5,7 +5,8 @@ class SimpleEvent extends React.Component {
     const { drizzle } = this.props;
     const contract = drizzle.contracts.SimpleEvent;
 
-    // let drizzle know we want to watch the `myString` method
+    // let drizzle know we want to watch the `getName` method
+    console.log(contract);
     const dataKey = contract.methods["getName"].cacheCall();
 
     // save the `dataKey` to local component state for later reference
@@ -17,10 +18,13 @@ class SimpleEvent extends React.Component {
     const { SimpleEvent } = this.props.drizzleState.contracts;
 
     // using the saved `dataKey`, get the variable we're interested in
-    const getName = SimpleEvent.getName[this.state.dataKey];
+    var getName = "loading..."
+    if(this.state != null){
+        getName = SimpleEvent.getName[this.state.dataKey];
+    }
 
     // if it exists, then we display its value
-    return <p>My name: {getName && getName.value}</p>;
+    return <p>Event name: {getName && getName.value}</p>;
   }
 }
 
