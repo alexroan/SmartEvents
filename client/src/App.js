@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SimpleEvent from './SimpleEvent';
+import SetName from './SetName';
 import './App.css';
 
 class App extends Component {
@@ -30,6 +31,10 @@ class App extends Component {
     return (
       <div className="App">
         <SimpleEvent
+          drizzle={this.props.drizzle}
+          drizzleState={this.state.drizzleState}
+        />
+        <SetName
           drizzle={this.props.drizzle}
           drizzleState={this.state.drizzleState}
         />
