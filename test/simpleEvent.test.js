@@ -1,4 +1,4 @@
-var SimpleEvent = artifacts.require("./SimpleEvent.sol");
+var SimpleEvent = artifacts.require("SimpleEvent");
 
 contract("SimpleEvent - Setting price", function (accounts){
     const alice = accounts[0];

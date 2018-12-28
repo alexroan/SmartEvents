@@ -1,9 +1,48 @@
 pragma solidity ^0.4.23;
 
-//Simple event selling tickets
-contract SimpleEvent {
-    //Owner of this contract
+//Owned by an address
+contract Owned {
     address owner;
+
+    //Only owner modifier
+    modifier onlyOwner(){
+        require(msg.sender == owner, "Only the owner can do this.");
+        _;
+    }
+}
+
+//Manages events
+contract EventManager is Owned{
+    //Events
+    address[] events;
+    //Event organisers => Events[]
+    mapping(address => address[]) eventOwners;
+
+    //Event Manager contract creation
+    constructor() public payable {
+        owner = msg.sender;
+    }
+
+    //Create a new event
+    //TODO test
+    function createNewEvent(string _name, uint _tickets, uint _price) public payable returns(address) {
+        address newEvent = new SimpleEvent(_name, _tickets, _price);
+        events.push(newEvent);
+        eventOwners[msg.sender].push(newEvent);
+        return newEvent;
+    }
+
+    //Get all events
+    //TODO test
+    function getAllEvents() public payable returns(address[]) {
+        return events;
+    }
+}
+
+//Simple event selling tickets
+contract SimpleEvent is Owned{
+    //Original event manager
+    address private manager;
     //Name of event
     string private name;
     //Description of event
@@ -32,7 +71,8 @@ contract SimpleEvent {
     //Create a new Event
     constructor(string _name, uint _tickets, uint _price) public payable {
         require (_tickets > 0, "Number of ticket greater than 0");
-        owner = msg.sender;
+        owner = tx.origin;
+        manager = msg.sender;
         name = _name;
         tickets = _tickets;
         price = _price;
@@ -94,12 +134,6 @@ contract SimpleEvent {
 
     //////-----------OnlyOwner-----------//////
 
-    //Only owner modifier
-    modifier onlyOwner(){
-        require(msg.sender == owner, "Only the owner can do this.");
-        _;
-    }
-
     //Set the price of a ticket in ether
     function setPrice(uint _newPrice) public onlyOwner returns (uint) {
         price = _newPrice;
@@ -148,16 +182,23 @@ contract SimpleEvent {
     //     return false;
     // }
 
-    //Get the contract balance
-    //TODO Test
-    function getBalance() public onlyOwner view returns (uint) {
-        return address(this).balance;
-    }
-
     //Withdraw balance from the contract
     //TODO Test
+    //TODO Manager takes commission when this method is called
     function withdraw(uint amount) public onlyOwner {
         require(amount >= address(this).balance, "Not enough balance to withdraw that");
         msg.sender.transfer(amount);
+    }
+
+    //Only owner modifier
+    modifier onlyOwnerOrManager(){
+        require(msg.sender == owner || msg.sender == manager, "Only the owner or original events manager can do this.");
+        _;
+    }
+
+    //Get the contract balance
+    //TODO Test
+    function getBalance() public onlyOwnerOrManager view returns (uint) {
+        return address(this).balance;
     }
 }
