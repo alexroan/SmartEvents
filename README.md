@@ -14,7 +14,7 @@ Future work:
 * Add name, description - DONE
 * Add venue, time - DONE
 * Verify tickets upon arrival
-* Tickets are their own contract?
-* Withdrawal based on either: time or unique ticket contract confirmation?
+* Withdrawal - DONE
+* Tokenise, using specific token to pay instead of Ether
 
 * Build easy dapp on top, so multiple events can be managed, tickets can be bought, etc
