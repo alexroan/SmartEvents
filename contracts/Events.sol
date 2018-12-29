@@ -1,13 +1,25 @@
 pragma solidity ^0.4.23;
 
-//Owned by an address
+//Owned contract
 contract Owned {
-    address owner;
+    address public owner;
+    address public newOwner;
+    event OwnershipTransferred(address indexed _from, address indexed _to);
 
-    //Only owner modifier
-    modifier onlyOwner(){
+    modifier onlyOwner {
         require(msg.sender == owner, "Only the owner can do this.");
         _;
+    }
+
+    function transferOwnership(address _newOwner) public onlyOwner {
+        newOwner = _newOwner;
+    }
+
+    function acceptOwnership() public {
+        require(msg.sender == newOwner, "Only the owner can do this.");
+        emit OwnershipTransferred(owner, newOwner);
+        owner = newOwner;
+        newOwner = address(0);
     }
 }
 
