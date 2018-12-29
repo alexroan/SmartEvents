@@ -24,7 +24,8 @@ contract Owned {
 }
 
 //Manages events
-contract EventManager is Owned{
+contract EventManager{
+    address owner;
     //Events
     address[] events;
     //Event organisers => Events[]
@@ -49,12 +50,33 @@ contract EventManager is Owned{
     function getAllEvents() public payable returns(address[]) {
         return events;
     }
+
+    modifier onlyOwner {
+        require(msg.sender == owner, "Only the owner can do this.");
+        _;
+    }
+
+    //Withdraw from this contract
+    //TODO test
+    function withdraw(uint amount) public onlyOwner payable {
+        require(amount <= address(this).balance, "Not enough balance to withdraw that.");
+        owner.transfer(amount);
+    }
+
+    //Get the contract balance
+    //TODO Test
+    function getBalance() public onlyOwner view returns (uint) {
+        return address(this).balance;
+    }
+
+    //Fallback function
+    function () public payable {}
 }
 
 //Simple event selling tickets
 contract SimpleEvent is Owned{
     //Original event manager
-    address private manager;
+    address public manager;
     //Name of event
     string private name;
     //Description of event
@@ -67,6 +89,8 @@ contract SimpleEvent is Owned{
     uint private tickets;
     //Price of tickets
     uint private price;
+    //Percentage of Balance that can be withdrawn, the rest is commission for the events manager
+    uint private withdrawPercentage;
     //Is the event cancelled
     bool private cancelled;
     //Has the ticket money been refunded
@@ -90,6 +114,7 @@ contract SimpleEvent is Owned{
         price = _price;
         cancelled = false;
         refunded = false;
+        withdrawPercentage = 90;
     }
 
     //Buy tickets for the event
@@ -196,10 +221,12 @@ contract SimpleEvent is Owned{
 
     //Withdraw balance from the contract
     //TODO Test
-    //TODO Manager takes commission when this method is called
-    function withdraw(uint amount) public onlyOwner {
-        require(amount >= address(this).balance, "Not enough balance to withdraw that");
-        msg.sender.transfer(amount);
+    function withdraw(uint amount) public payable onlyOwner {
+        uint maxWithdraw = address(this).balance * withdrawPercentage / 100;
+        require(amount <= maxWithdraw, "Not enough balance to withdraw that.");
+        bool sentToOwner = owner.send(amount);
+        require(sentToOwner != false, "Could not send to owner");
+        manager.transfer(address(this).balance);
     }
 
     //Only owner modifier
