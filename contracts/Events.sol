@@ -98,8 +98,6 @@ contract SimpleEvent is Owned{
 
     //Tickets held
     mapping(address => uint) ticketHolders;
-    //Balances for each account
-    mapping(address => uint) balances;
 
     //Log on the blockchain that tickets have been bought
     event LogTicketsBought(address indexed accountAddress, uint tickets, uint cost);
@@ -126,8 +124,13 @@ contract SimpleEvent is Owned{
         require(msg.value >= _tickets * price, "Not enough ether sent to buy that many tickets");
         tickets -= _tickets;
         ticketHolders[msg.sender] = _tickets;
-        balances[msg.sender] += msg.value;
         emit LogTicketsBought(msg.sender, _tickets, msg.value);
+    }
+
+    //Returns amount of tickets bought by sender
+    //TODO test
+    function myTickets() public returns(uint) {
+        return ticketHolders[msg.sender];
     }
 
     //Return price of a ticket in ether

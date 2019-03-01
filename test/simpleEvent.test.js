@@ -1,5 +1,8 @@
 var SimpleEvent = artifacts.require("SimpleEvent");
 
+/**
+ * Owner getter and setter tests
+ */
 contract("SimpleEvent - Only Owner Getters and Setters", function (accounts){
     const alice = accounts[0];
     const bob = accounts[1];
@@ -134,6 +137,9 @@ contract("SimpleEvent - Only Owner Getters and Setters", function (accounts){
     });
 });
 
+/**
+ * Initializaton tests
+ */
 contract("SimpleEvent - Initialize event, tickets and price count", function(accounts){
     it("should be initialized with 8 tickets and price = 1", async () => {
         const event = await SimpleEvent.deployed();
@@ -161,5 +167,16 @@ contract("SimpleEvent - Initialize event, tickets and price count", function(acc
             err = error;
         }
         assert.equal(err.message, "VM Exception while processing transaction: revert");
+    });
+});
+
+contract("SimpleEvent - Buying tickets", function(accounts){
+    it("should allow tickets to be purchased", async () => {
+        const event = await SimpleEvent.deployed();
+        try{
+            await event.buyTickets.call({from: alice, value: 1});
+        } catch (error){
+            console.log(error);
+        }
     });
 });
