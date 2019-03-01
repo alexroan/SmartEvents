@@ -24,6 +24,50 @@ contract("SimpleEvent - Setting price", function (accounts){
             assert.equal(err.message, "VM Exception while processing transaction: revert");
         }
     });
+
+    it("should allow the owner to set the name", async () => {
+        const name = "New Event Name";
+        const event = await SimpleEvent.deployed();
+        await event.setName(name, {from: alice});
+        newEventName = await event.getName.call();
+        assert.equal(newEventName, name, "Event name incorrect");
+    });
+
+    it("should not allow anyone other than the owner to set the name", async () => {
+        const event = await SimpleEvent.deployed();
+        name = "New Name";
+        for (let index = 1; index < accounts.length; index++) {
+            const account = accounts[index];
+            try{
+                await event.setName(name, {from: account});
+            } catch (error){
+                err = error;
+            }
+            assert.equal(err.message, "VM Exception while processing transaction: revert");
+        }
+    });
+
+    it("should allow the owner to set the description", async () => {
+        const description = "New Event Description";
+        const event = await SimpleEvent.deployed();
+        await event.setDescription(description, {from: alice});
+        newEventDescription = await event.getDescription.call();
+        assert.equal(newEventDescription, description, "Event name incorrect");
+    });
+
+    it("should not allow anyone other than the owner to set the description", async () => {
+        const event = await SimpleEvent.deployed();
+        description = "New Description";
+        for (let index = 1; index < accounts.length; index++) {
+            const account = accounts[index];
+            try{
+                await event.setDescription(description, {from: account});
+            } catch (error){
+                err = error;
+            }
+            assert.equal(err.message, "VM Exception while processing transaction: revert");
+        }
+    });
 });
 
 contract("SimpleEvent - Initialize event, tickets and price count", function(accounts){

@@ -178,14 +178,12 @@ contract SimpleEvent is Owned{
     }
 
     //Set the name
-    //TODO test
     function setName(string _name) public onlyOwner returns(string) {
         name = _name;
         return name;
     }
 
     //Set the description
-    //TODO test
     function setDescription(string _description) public onlyOwner returns(string) {
         description = _description;
         return description;
