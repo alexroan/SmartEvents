@@ -171,12 +171,49 @@ contract("SimpleEvent - Initialize event, tickets and price count", function(acc
 });
 
 contract("SimpleEvent - Buying tickets", function(accounts){
+    const alice = accounts[0];
+    const bob = accounts[1];
+    const price = 1;
+    const numberOfTickets = 10;
+    const totalMsgValue = price*numberOfTickets;
+
     it("should allow tickets to be purchased", async () => {
-        const event = await SimpleEvent.deployed();
+        var myEvent = await SimpleEvent.new("New Event", numberOfTickets, price);
+        ticketsBought = await myEvent.buyTickets.call(numberOfTickets, {from: bob, value: totalMsgValue});
+        assert.equal(numberOfTickets, ticketsBought, "Wrong number of tickets bought");
+    });
+
+    it("should fail if not enough ether is sent", async () => {
+        let err = null;
+        const event = await SimpleEvent.new("New Event", numberOfTickets, price);
         try{
-            await event.buyTickets.call({from: alice, value: 1});
+            await event.buyTickets.call(numberOfTickets+1, {from: bob, value: totalMsgValue});
         } catch (error){
-            console.log(error);
+            err = error;
         }
+        assert.equal(err.message, "VM Exception while processing transaction: revert");
+    });
+
+    it("should fail if there are no tickets left", async () => {
+        let err = null;
+        const event = await SimpleEvent.new("New Event", 1, price);
+        await event.buyTickets.call(1, {from: bob, value: price});
+        try{
+            await event.buyTickets.call(numberOfTickets, {from: bob, value: totalMsgValue});
+        } catch (error){
+            err = error;
+        }
+        assert.equal(err.message, "VM Exception while processing transaction: revert");
+    });
+
+    it("should fail if there there are not enough tickets left", async () => {
+        let err = null;
+        const event = await SimpleEvent.new("New Event", numberOfTickets-1, price);
+        try{
+            await event.buyTickets.call(numberOfTickets, {from: bob, value: totalMsgValue});
+        } catch (error){
+            err = error;
+        }
+        assert.equal(err.message, "VM Exception while processing transaction: revert");
     });
 });

@@ -116,21 +116,21 @@ contract SimpleEvent is Owned{
     }
 
     //Buy tickets for the event
-    //TODO Test
     function buyTickets(uint _tickets) public payable returns(uint) {
         require(cancelled == false, "Event has been cancelled");
         require(tickets > 0, "No tickets available");
         require(tickets >= _tickets, "Not enough tickets available");
         require(msg.value >= _tickets * price, "Not enough ether sent to buy that many tickets");
         tickets -= _tickets;
-        ticketHolders[msg.sender] = _tickets;
+        ticketHolders[msg.sender] += _tickets;
         emit LogTicketsBought(msg.sender, _tickets, msg.value);
+        return ticketHolders[msg.sender];
     }
 
     //Returns amount of tickets bought by sender
     //TODO test
-    function myTickets() public returns(uint) {
-        return ticketHolders[msg.sender];
+    function myTickets(address _purchaser) public view returns(uint) {
+        return ticketHolders[_purchaser];
     }
 
     //Return price of a ticket in ether
