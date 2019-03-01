@@ -1,6 +1,6 @@
 var SimpleEvent = artifacts.require("SimpleEvent");
 
-contract("SimpleEvent - Setting price", function (accounts){
+contract("SimpleEvent - Only Owner Getters and Setters", function (accounts){
     const alice = accounts[0];
     const bob = accounts[1];
     it("should allow the owner to set the price", async () => {
@@ -52,7 +52,7 @@ contract("SimpleEvent - Setting price", function (accounts){
         const event = await SimpleEvent.deployed();
         await event.setDescription(description, {from: alice});
         newEventDescription = await event.getDescription.call();
-        assert.equal(newEventDescription, description, "Event name incorrect");
+        assert.equal(newEventDescription, description, "Event description incorrect");
     });
 
     it("should not allow anyone other than the owner to set the description", async () => {
@@ -62,6 +62,70 @@ contract("SimpleEvent - Setting price", function (accounts){
             const account = accounts[index];
             try{
                 await event.setDescription(description, {from: account});
+            } catch (error){
+                err = error;
+            }
+            assert.equal(err.message, "VM Exception while processing transaction: revert");
+        }
+    });
+
+    it("should allow the owner to set the date", async () => {
+        const date = "New Event Date";
+        const event = await SimpleEvent.deployed();
+        await event.setDate(date, {from: alice});
+        newEventDate = await event.getDate.call();
+        assert.equal(newEventDate, date, "Event date incorrect");
+    });
+
+    it("should not allow anyone other than the owner to set the date", async () => {
+        const event = await SimpleEvent.deployed();
+        date = "New Date";
+        for (let index = 1; index < accounts.length; index++) {
+            const account = accounts[index];
+            try{
+                await event.setDate(date, {from: account});
+            } catch (error){
+                err = error;
+            }
+            assert.equal(err.message, "VM Exception while processing transaction: revert");
+        }
+    });
+
+    it("should allow the owner to set the venue", async () => {
+        const venue = "New Event Venue";
+        const event = await SimpleEvent.deployed();
+        await event.setVenue(venue, {from: alice});
+        newEventVenue = await event.getVenue.call();
+        assert.equal(newEventVenue, venue, "Event venue incorrect");
+    });
+
+    it("should not allow anyone other than the owner to set the venue", async () => {
+        const event = await SimpleEvent.deployed();
+        venue = "New Venue";
+        for (let index = 1; index < accounts.length; index++) {
+            const account = accounts[index];
+            try{
+                await event.setVenue(venue, {from: account});
+            } catch (error){
+                err = error;
+            }
+            assert.equal(err.message, "VM Exception while processing transaction: revert");
+        }
+    });
+
+    it("should allow the owner to cancel the event", async () => {
+        const event = await SimpleEvent.deployed();
+        await event.cancel({from: alice});
+        isCancelled = await event.isCancelled.call();
+        assert.equal(isCancelled, true, "Event not cancelled correctly");
+    });
+
+    it("should not allow anyone other than the owner to cancel the event", async () => {
+        const event = await SimpleEvent.deployed();
+        for (let index = 1; index < accounts.length; index++) {
+            const account = accounts[index];
+            try{
+                await event.cancel({from: account});
             } catch (error){
                 err = error;
             }

@@ -141,25 +141,21 @@ contract SimpleEvent is Owned{
     }
 
     //Get name of event
-    //TODO Test
     function getName() public view returns(string) {
         return name;
     }
 
     //Get description of event
-    //TODO Test
     function getDescription() public view returns(string) {
         return description;
     }
 
     //Get date of event
-    //TODO Test
     function getDate() public view returns(string) {
         return date;
     }
 
     //Get the venue
-    //TODO test
     function getVenue() public view returns(string) {
         return venue;
     }
@@ -190,21 +186,18 @@ contract SimpleEvent is Owned{
     }
 
     //Set the date
-    //TODO test
     function setDate(string _date) public onlyOwner returns(string) {
         date = _date;
         return date;
     }
 
     //Set the venue
-    //TODO test
     function setVenue(string _venue) public onlyOwner returns(string) {
         venue = _venue;
         return venue;
     }
 
     //Cancel event
-    //TODO test
     function cancel() public onlyOwner {
         require(cancelled == false, "Event already cancelled");
         cancelled = true;
